@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>BlockShield Analyzer</title>
+		<link rel="stylesheet" href="/styles.css" />
+		<script
+			src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit"
+			async
+			defer
+		></script>
+	</head>
+	<body>
+		<main class="analyzer-card">
+			<header>
+				<p class="eyebrow">Edge analytics</p>
+				<h1>BlockShield Analyzer</h1>
+				<p class="intro">Enter a comma-separated list to calculate its summary.</p>
+			</header>
+
+			<form id="analyze-form">
+				<label for="numbers">Enter numbers</label>
+				<div class="input-row">
+					<input
+						id="numbers"
+						name="numbers"
+						type="text"
+						value="10, 20, 30, 40"
+						placeholder="10, 20, 30"
+						autocomplete="off"
+						required
+					/>
+					<button type="submit">Analyze</button>
+				</div>
+				<div id="turnstile-widget"></div>
+				<p id="error" class="error" role="alert" hidden></p>
+			</form>
+
+			<section id="results" class="results" aria-live="polite" hidden>
+				<h2>Results</h2>
+				<dl>
+					<div><dt>Count</dt><dd id="count">—</dd></div>
+					<div><dt>Sum</dt><dd id="sum">—</dd></div>
+					<div><dt>Average</dt><dd id="average">—</dd></div>
+					<div><dt>Minimum</dt><dd id="min">—</dd></div>
+					<div><dt>Maximum</dt><dd id="max">—</dd></div>
+				</dl>
+			</section>
+		</main>
+
+		<script src="/app.js" defer></script>
+	</body>
+</html>

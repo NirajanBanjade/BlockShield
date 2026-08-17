@@ -2,12 +2,17 @@
   "name": "blockshield",
   "version": "0.0.0",
   "private": true,
-  "scripts": {
-    "deploy": "wrangler deploy",
-    "dev": "wrangler dev",
-    "start": "wrangler dev",
-    "test": "vitest"
-  },
+	"scripts": {
+		"deploy": "wrangler deploy",
+		"dev": "wrangler dev",
+		"db:migrate:local": "wrangler d1 migrations apply edgeshield-db --local",
+		"db:migrate:remote": "wrangler d1 migrations apply edgeshield-db --remote",
+		"db:migrations:list": "wrangler d1 migrations list edgeshield-db --remote",
+		"simulate": "node simulator/attack.js",
+		"start": "wrangler dev",
+		"test": "vitest",
+		"types": "wrangler types"
+	},
   "devDependencies": {
     "@cloudflare/vitest-pool-workers": "^0.12.4",
     "vitest": "~3.2.0",

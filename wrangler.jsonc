@@ -1,45 +1,71 @@
-/**
- * For more details on how to configure Wrangler, refer to:
- * https://developers.cloudflare.com/workers/wrangler/configuration/
- */
+
 {
 	"$schema": "node_modules/wrangler/config-schema.json",
 	"name": "blockshield",
 	"main": "src/index.js",
-	"compatibility_date": "2026-08-09",
+	"compatibility_date": "2026-08-08",
+	"workers_dev": true,
+	"preview_urls": false,
 	"observability": {
 		"enabled": true
 	},
 	"upload_source_maps": true,
 	"compatibility_flags": [
 		"nodejs_compat"
+	],
+	"vars": {
+		"TURNSTILE_EXPECTED_ACTION": "analyze"
+	},
+	"secrets": {
+		"required": [
+			"API_KEY",
+			"API_SECRET",
+			"TURNSTILE_SECRET",
+			"TURNSTILE_SITE_KEY",
+			"TURNSTILE_EXPECTED_HOSTNAME"
+		]
+	},
+	"assets": {
+		"directory": "./public"
+	},
+	"durable_objects": {
+		"bindings": [
+			{
+				"name": "RATE_LIMITER",
+				"class_name": "RateLimiter"
+			}
+		]
+	},
+	"queues": {
+		"producers": [
+			{
+				"binding": "SECURITY_EVENTS",
+				"queue": "edgeshield-security-events"
+			}
+		],
+		"consumers": [
+			{
+				"queue": "edgeshield-security-events",
+				"max_batch_size": 10,
+				"max_batch_timeout": 5,
+				"max_retries": 3
+			}
+		]
+	},
+	"d1_databases": [
+		{
+			"binding": "DB",
+			"database_name": "edgeshield-db",
+			"database_id": "6f8382c9-cf1b-4ef4-83ac-6a90b8e18507",
+			"migrations_dir": "migrations"
+		}
+	],
+	"migrations": [
+		{
+			"tag": "v1",
+			"new_sqlite_classes": [
+				"RateLimiter"
+			]
+		}
 	]
-	/**
-	 * Smart Placement
-	 * https://developers.cloudflare.com/workers/configuration/smart-placement/#smart-placement
-	 */
-	// "placement": {  "mode": "smart" }
-	/**
-	 * Bindings
-	 * Bindings allow your Worker to interact with resources on the Cloudflare Developer Platform, including
-	 * databases, object storage, AI inference, real-time communication and more.
-	 * https://developers.cloudflare.com/workers/runtime-apis/bindings/
-	 */
-	/**
-	 * Environment Variables
-	 * https://developers.cloudflare.com/workers/wrangler/configuration/#environment-variables
-	 * Note: Use secrets to store sensitive data.
-	 * https://developers.cloudflare.com/workers/configuration/secrets/
-	 */
-	// "vars": {  "MY_VARIABLE": "production_value" }
-	/**
-	 * Static Assets
-	 * https://developers.cloudflare.com/workers/static-assets/binding/
-	 */
-	// "assets": {  "directory": "./public/",  "binding": "ASSETS" }
-	/**
-	 * Service Bindings (communicate between multiple Workers)
-	 * https://developers.cloudflare.com/workers/wrangler/configuration/#service-bindings
-	 */
-	// "services": [  {   "binding": "MY_SERVICE",   "service": "my-service"  } ]
 }
